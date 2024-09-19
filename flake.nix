@@ -9,6 +9,7 @@
     lib.noSys = inputs @ {
       systems ? import ./systems.nix,
       config ? {},
+      overlays ? [],
       ...
     }: f: let
       systems' =
@@ -34,6 +35,11 @@
                 then
                   import v {
                     inherit system config;
+                  }
+                else if inputs ? overlays && inputs.overlays != []
+                then
+                  import v {
+                    inherit system overlays;
                   }
                 else input.legacyPackages;
             in
